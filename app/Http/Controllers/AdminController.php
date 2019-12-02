@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
 
 class AdminController extends Controller
 {
@@ -13,7 +14,23 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('admin.index');
+        //var_dump(Auth::user()->roles->role);
+        if (!empty(Auth::user()->roles->role)){
+            $role = Auth::user()->roles->role;
+            if ($role == 'admin') {
+                $categories = Category::all();
+                $users = User::all();
+                return view('admin.index', compact('users', 'categories'));
+            } elseif ($role == 'editor') {
+                $user = Auth::user();
+                $categories = Category::all();
+                return view('admin.index', compact('user', 'categories'));
+            } else {
+                return view('auth.register');
+            }
+        } else {
+            return view('auth.register');
+        }
     }
 
     /**
