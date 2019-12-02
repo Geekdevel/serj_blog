@@ -14,7 +14,7 @@
                     <ul class="list-group">
                         @foreach ($categories as $category)
                             <li class="list-group-item">
-                                <h5>{{ $category->title }}</h5>
+                                <h5><a href="/category/{{ $category->id }}">{{ $category->title }}</a></h5>
                                 <p>How many posts in the category: {{ $category->posts->count() }}</p>
                             </li>
                         @endforeach

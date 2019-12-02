@@ -47,7 +47,6 @@
                                         <th>Email</th>
                                         <th>Role</th>
                                         <th>EDIT</th>
-                                        <th>DELETE</th>
                                     </tr>
                                     <tr>
                                         <td>{{ $user->first_name }}</td>
@@ -55,13 +54,6 @@
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->roles->role }}</td>
                                         <td><a href="/user/{{ $user->id }}/edit" class="btn btn-primary">EDIT</a></td>
-                                        <td>
-                                            <form action="{{ route('user.destroy', $user->id)}}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-danger" type="submit">Delete</button>
-                                            </form>
-                                        </td>
                                     </tr>
                                 </table>
                             </div>
