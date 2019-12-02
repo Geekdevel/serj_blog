@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use App\Category;
+use App\User;
 
 class AdminController extends Controller
 {
@@ -20,7 +22,8 @@ class AdminController extends Controller
             if ($role == 'admin') {
                 $categories = Category::all();
                 $users = User::all();
-                return view('admin.index', compact('users', 'categories'));
+                $user = Auth::user();
+                return view('admin.index', compact('users', 'user', 'categories'));
             } elseif ($role == 'editor') {
                 $user = Auth::user();
                 $categories = Category::all();
