@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Category;
 use App\User;
+use App\Role;
 
 class AdminController extends Controller
 {
@@ -23,11 +24,18 @@ class AdminController extends Controller
                 $categories = Category::all();
                 $users = User::all();
                 $user = Auth::user();
-                return view('admin.index', compact('users', 'user', 'categories'));
+                return view('admin.index', compact('role', 'users', 'user', 'categories'));
             } elseif ($role == 'editor') {
                 $user = Auth::user();
-                $categories = Category::all();
-                return view('admin.index', compact('user', 'categories'));
+                $categories=[];
+                $posts = $user->posts;
+                foreach ($posts as $post)
+                {
+                    $categories[] = $post->category;
+                }
+                //var_dump($posts);
+                //$categories = Category::all();
+                return view('admin.index', compact('role', 'user', 'categories'));
             } else {
                 return view('auth.register');
             }
@@ -76,7 +84,10 @@ class AdminController extends Controller
      */
     public function edit($id)
     {
-        //
+        $role = Auth::user()->roles->role;
+        $user = User::find($id);
+        $roles = Role::all();
+        return view('admin.edit', compact('user', 'role', 'roles'));
     }
 
     /**
@@ -88,7 +99,19 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //var_dump($request);
+        $user = User::find($id);
+        $user->first_name = strip_tags($request->first_name);
+        $user->last_name = strip_tags($request->last_name);
+        $user->email = strip_tags($request->email);
+
+        if (!empty($request->role)) {
+            $user->role_id = $request->role;
+        }
+
+        $user->save();
+
+        return redirect('/user')->with('success', 'User edit');
     }
 
     /**
@@ -99,6 +122,8 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+        return redirect('/user')->with('success', 'User DELETE');
     }
 }
