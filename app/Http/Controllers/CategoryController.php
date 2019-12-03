@@ -16,7 +16,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        if (!empty($user)){
+            $categories = Category::all();
+            return view('category.index', compact('user', 'categories'));
+        } else {
+            return redirect('/neh');
+        }
     }
 
     /**
@@ -26,7 +32,13 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $user = Auth::user();
+        if (!empty($user) && $user->roles->role == 'admin'){
+            $category = new Category();
+            return view('category.create', compact('user', 'category'));
+        } else {
+            return redirect('/view/errors/neh.php');
+        }
     }
 
     /**
@@ -37,7 +49,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $category = new Category();
+
+        $category->title = htmlspecialchars($request->title);
+        $category->description = htmlspecialchars($request->description);
+        $category->meta_keywords = htmlspecialchars($request->meta_keywords);
+        $category->meta_description = htmlspecialchars($request->meta_description);
+
+        $category->save();
+
+        return redirect('/category')->with('success', 'Category CREATE!');
     }
 
     /**
@@ -55,13 +76,35 @@ class CategoryController extends Controller
             if ($role == 'admin') {
                 $category = Category::find($id);
                 $posts = $category->posts;
+
                 return view('category.show', compact('category', 'posts', 'user', 'role'));
+
             } elseif ($role == 'editor') {
-                //
+                $category = Category::find($id);
+                $posts_all_cetegory = $category->posts;
+                $posts = [];
+
+                foreach ($posts_all_cetegory as $post)
+                {
+                    /*var_dump($post->user->id);
+                    exit;*/
+                    if (!empty($post->user->id) == $user->id) {
+                        $posts[] = $post;
+                    }
+                }
+
+                if (!empty($posts)){
+                    return view('category.show', compact('category', 'posts', 'user', 'role'));
+                } else {
+                    $aliarm = 'There are no your height in this category. Want to create?';
+                    return view('category.show', compact('category', 'aliarm', 'user', 'role'));
+                }
+
             }
         } else {
             $category = Category::find($id);
             $posts = $category->posts;
+
             return view('category.show', compact('category', 'posts'));
         }
     }
@@ -75,8 +118,12 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        $post = Post::find($id);
-        return view('');
+        if (!empty($user) && $user->roles->role == 'admin'){
+            $category = Category::find($id);
+            return view('category.edit', compact('user', 'category'));
+        } else {
+            return redirect('/view/errors/neh.php');
+        }
     }
 
     /**
@@ -88,7 +135,16 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $category = Category::find($id);
+
+        $category->title = htmlspecialchars($request->title);
+        $category->description = htmlspecialchars($request->description);
+        $category->meta_keywords = htmlspecialchars($request->meta_keywords);
+        $category->meta_description = htmlspecialchars($request->meta_description);
+
+        $category->save();
+
+        return redirect('/category/{{$category->id}}')->with('success', 'Category APDATE!');
     }
 
     /**
@@ -99,6 +155,8 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = Category::find($id);
+        $category->delete();
+        return redirect('/user')->with('success', 'Category DELETE');
     }
 }

@@ -77,13 +77,5 @@
             </div>
         </div>
     </div>
-    @if ($role == 'admin')
-        <div class="row justify-content-center">
-            <div class="col-12"><a href="/category/create" class="btn btn-primary">Create category</a></div>
-        </div>
-    @endif
-    <div class="row justify-content-center">
-        <div class="col-12"><a href="/posts/create" class="btn btn-primary">Create posts</a></div>
-    </div>
 </div>
 @endsection
