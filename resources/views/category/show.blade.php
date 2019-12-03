@@ -32,7 +32,7 @@
                     @if (empty($aliarm))
                         @foreach ( $posts as $post )
                             <div class="row">
-                                <div class="card">
+                                <div class="card col-md-12">
                                     <img class="card-img-top" src="{{ !empty($post->image) ? $post->image : asset('images/NonIzo.png')}}" alt="Card image cap" style="width: 200px; height: 200px; margin: auto;">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $post->title }}</h5>
@@ -68,7 +68,7 @@
                     @else
                         <div class="row">
                             <h2>{{ $aliarm }}</h2>
-                            <a href="/category/create" class="btn btn-success">CREATE</a>
+                            <a href="/posts/create" class="btn btn-success">CREATE</a>
                         </div>
                     @endif
 

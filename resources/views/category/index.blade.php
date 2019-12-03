@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-    @if (!empty($user->roles->role) == 'admin')
+    @if (!empty($user->roles->role) && $user->roles->role == 'admin')
         <div class="row">
             <div class="col-12 text-center"><a href="/category/create" class="btn btn-success">Create category</a></div>
         </div>

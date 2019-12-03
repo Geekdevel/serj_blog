@@ -37,7 +37,7 @@ class CategoryController extends Controller
             $category = new Category();
             return view('category.create', compact('user', 'category'));
         } else {
-            return redirect('/view/errors/neh.php');
+            return redirect('/neh');
         }
     }
 
@@ -69,7 +69,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        if (!empty(Auth::user()->roles->role)) {
+        if (!empty(Auth::user())) {
             $role = Auth::user()->roles->role;
             $user = Auth::user();
 
@@ -88,7 +88,7 @@ class CategoryController extends Controller
                 {
                     /*var_dump($post->user->id);
                     exit;*/
-                    if (!empty($post->user->id) == $user->id) {
+                    if (!empty($post->user->id) && $post->user->id == $user->id) {
                         $posts[] = $post;
                     }
                 }

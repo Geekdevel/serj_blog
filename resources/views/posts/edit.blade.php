@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('posts.update') }}">
+                    <form method="POST" action="{{ route('posts.update', $post->id)  }}">
                         @method ( 'PUT')
                         @csrf
 
@@ -24,6 +24,23 @@
                                         <option value="{{$category->id}}">{{$category->title}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- Images upload -->
+                        <div class="row">
+                            <div class="col-md-6 text-center">
+                                @if (!empty($post->image))
+                                    <img src="{{ asset($post->image) }}" alt="image" style="width: 200px; height: 200px;">
+                                @else
+                                    <img src="{{ asset('/images/NonIzo.png') }}" alt="image" style="width: 200px; height: 200px;">
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-6 offset-md-4">
+                                    <input type="file" name="image">
                             </div>
                         </div>
 
@@ -45,7 +62,7 @@
                             <label for="body" class="col-md-4 col-form-label text-md-right">{{ __('Body') }}</label>
 
                             <div class="col-md-6">
-                                <textarea id="body" type="text" class="form-control @error('body') is-invalid @enderror" name="body" value="{{ $post->body }}" required autocomplete="body" autofocus></textarea>
+                                <textarea id="body" type="text" class="form-control @error('body') is-invalid @enderror" name="body" required autocomplete="body" autofocus>{{ $post->body }}</textarea>
 
                                 @error('body')
                                     <span class="invalid-feedback" role="alert">
@@ -73,7 +90,7 @@
                             <label for="meta_description" class="col-md-4 col-form-label text-md-right">{{ __('Meta_description') }}</label>
 
                             <div class="col-md-6">
-                                <textarea id="meta_description" type="text" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" value="{{ $post->meta_description }}" required autocomplete="meta_description"></textarea>
+                                <textarea id="meta_description" type="text" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" required autocomplete="meta_description">{{ $post->meta_description }}</textarea>
 
                                 @error('meta_description')
                                     <span class="invalid-feedback" role="alert">
