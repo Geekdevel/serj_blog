@@ -69,20 +69,26 @@ class PostsController extends Controller
         $post = new Post();
         $post->title = strip_tags($request->title);
         $post->body = htmlspecialchars($request->body);
-        $post->category_id = strip_tags($request->category_id);
+        $post->category_id = strip_tags($request->category);
         $post->author_id = $request->user;
         $post->meta_keywords = htmlspecialchars($request->meta_keywords);
         $post->meta_description = htmlspecialchars($request->meta_description);
 
+
         if (!empty($request->image)) {
-            $post->image = $request->image;
+            if($request->hasFile('image')) {
+                $file = $request->file('image');
+                $newName = date('dWmYB');
+                $file->move(public_path() . '/images', $newName.'.img');
+                $post->image = '/images/'.$newName.'.img';
+            }
         } else {
             $post->image = null;
         }
 
         $post->save();
 
-        return redirect('/posts/{{$post->id}}');
+        return redirect('/posts/'.$post->id);
     }
 
     /**

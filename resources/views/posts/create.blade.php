@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('posts.store') }}">
+                    <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                         @csrf
 
                         <input id="user" type="text" name="user" value="{{ $user->id }}" hidden>
@@ -20,6 +20,13 @@
                                         <option value="{{$category->id}}">{{$category->title}}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- Images upload -->
+                        <div class="form-group row">
+                            <div class="col-md-6 offset-md-4">
+                                    <input type="file" name="image">
                             </div>
                         </div>
 

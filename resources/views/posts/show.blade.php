@@ -10,7 +10,18 @@
                 @else
                     <div class="card-header text-center">Welcom to post!</div>
                 @endif
-                <h3>Category: {{ !empty($post->category->title) ? $post->category->title : 'Last category.' }}</h3>
+                <h3>
+                    Category:
+                    <a href="
+                        @if (!empty($post->category))
+                        /category/{{$post->category_id}}
+                        @else
+                        #
+                        @endif
+                        ">
+                        {{ !empty($post->category->title) ? $post->category->title : 'Last category.' }}
+                    </a>
+                </h3>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 text-center">
@@ -20,7 +31,7 @@
 
                     <div class="row">
                         <div class="col-12 text-center">
-                            <img src="{{ !empty($post->image) ? $post->image : asset('images/NonIzo.png') }}" alt="image">
+                            <img src="{{ !empty($post->image) ? asset($post->image) : asset('images/NonIzo.png') }}" alt="image">
                         </div>
                     </div>
 
@@ -72,7 +83,7 @@
                     @if (!empty($user))
                     <div class="row">
                         <div class="col-6">
-                            <a href="/posts/{{$post->id}}/edit" class="btn btn-primary">EDIT</a>
+                            <a href="{{ route('posts.edit', $post->id)}}" class="btn btn-primary">EDIT</a>
                         </div>
                         <div class="col-6">
                             <form action="{{ route('posts.destroy', $post->id)}}" method="POST">
