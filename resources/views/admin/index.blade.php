@@ -12,6 +12,7 @@
                         @if (!empty($users))
                             <div class="col-md-6">
                                 <table class="text-center">
+                                    <thead>
                                     <tr>
                                         <th>First name</th>
                                         <th>Last name</th>
@@ -20,6 +21,8 @@
                                         <th>EDIT</th>
                                         <th>DELETE</th>
                                     </tr>
+                                </thead>
+                                <tbody>
                                     @foreach ($users as $user)
                                         <tr>
                                             <td>{{ $user->first_name }}</td>
@@ -36,6 +39,7 @@
                                             </td>
                                         </tr>
                                     @endforeach
+                                </tbody>
                                 </table>
                             </div>
                         @else

@@ -6,9 +6,9 @@
         <div class="col-md-12">
             <div class="card">
                 @if (!empty($user))
-                    <div class="card-header text-center">Welcom to {{ mb_strtoupper($user->roles->role) }} {{ $user->first_name.' '.$user->last_name }}</div>
+                    <div class="card-header text-center">Welcome to {{ mb_strtoupper($user->roles->role) }} {{ $user->first_name.' '.$user->last_name }}</div>
                 @else
-                    <div class="card-header text-center">Welcom to post!</div>
+                    <div class="card-header text-center">Welcome to post!</div>
                 @endif
                 <h3>
                     Category:
@@ -31,17 +31,17 @@
 
                     <div class="row">
                         <div class="col-12 text-center">
-                            <img src="{{ !empty($post->image) ? asset($post->image) : asset('images/NonIzo.png') }}" alt="image">
+                            <img src="{{ $post->image ? '/storage/'.$post->image : asset('images/NonIzo.png') }}" alt="{{ $post->title}}" height="300px">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-12">
-                            <p style="text-align: justify;">{{ htmlspecialchars_decode($post->body) }}</p>
+                            {!! $post->body !!}
                         </div>
                     </div>
 
-                    <div class="row">
+                   {{--  <div class="row">
                         <div class="col-12">
                             <p style="text-align: justify;">{{ htmlspecialchars_decode($post->meta_keywords) }}</p>
                         </div>
@@ -51,7 +51,7 @@
                         <div class="col-12">
                             <p style="text-align: justify;">{{ htmlspecialchars_decode($post->meta_description) }}</p>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="row">
                         <div class="col-12">
@@ -72,10 +72,13 @@
                                     @foreach ($post->tags as $tag)
                                     <?= ' '.$tag->title.' ' ?>
                                     @endforeach
-                                @else
-                                no tags!
                                 @endif
                             </p>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-6 text-center">
+                            <a href="#" id="add_tag" class="btn btn-primary">ADD TAG</a>
                         </div>
                     </div>
                 </div>
@@ -100,4 +103,3 @@
     </div>
 </div>
 @endsection
-s

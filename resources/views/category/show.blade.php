@@ -22,7 +22,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-12 btn-group">
                                     @if ($role == 'admin')
-                                        <a href="category/{{ $category->id }}/edit" class="btn btn-success btn-secondary">EDIT</a>
+                                        <a href="/0449category/{{ $category->id }}/edit" class="btn btn-success btn-secondary">EDIT</a>
                                             <form action="{{ route('category.destroy', $category->id)}}" method="POST">
                                                 @csrf
                                                 @method('DELETE')

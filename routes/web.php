@@ -13,9 +13,10 @@
 
 Route::get('/', 'GuestController@index');
 Route::get('/neh', 'ErrorsController@neh');
+Route::get('/logout', 'Auth\LoginController@logout');
 
 Auth::routes();
 
 Route::resource('/user', 'AdminController');
 Route::resource('/category', 'CategoryController');
-Route::resource('/posts', 'PostsController');
+Route::resource('/posts', 'PostController');

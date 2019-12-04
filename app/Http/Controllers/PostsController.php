@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
 use App\Category;
 use App\User;
 use App\Post;
 
-class PostsController extends Controller
+class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +17,7 @@ class PostsController extends Controller
     public function index()
     {
         $posts = Post::all();
-        $user = Auth::user();
+        $user = auth()->user();
         if (!empty($user)) {
             $role = $user->roles->role;
             if ($role == 'admin') {
@@ -47,11 +46,10 @@ class PostsController extends Controller
      */
     public function create()
     {
-        $user = Auth::user();
-        if (!empty($user)) {
+        $user = auth()->user();
+        if ($user) {
             $categories = Category::all();
-            $post = new Post();
-            return view('posts.create', compact('categories', 'post', 'user'));
+            return view('posts.create', compact('categories', 'user'));
         } else {
             return redirect('/neh');
         }
@@ -68,23 +66,19 @@ class PostsController extends Controller
     {
         $post = new Post();
         $post->title = strip_tags($request->title);
-        $post->body = htmlspecialchars($request->body);
+        $post->body =$request->body;
         $post->category_id = strip_tags($request->category);
         $post->author_id = $request->user;
         $post->meta_keywords = htmlspecialchars($request->meta_keywords);
         $post->meta_description = htmlspecialchars($request->meta_description);
+        //$post = Post::create($array);
 
-
-        if (!empty($request->image)) {
             if($request->hasFile('image')) {
-                $file = $request->file('image');
-                $newName = date('dWmYB');
-                $file->move(public_path() . '/images', $newName.'.img');
-                $post->image = '/images/'.$newName.'.img';
+                $post->image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
             }
-        } else {
-            $post->image = null;
-        }
+            else {
+                $post->image = null;
+            }
 
         $post->save();
 
@@ -97,10 +91,10 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        $user = Auth::user();
-        $post = Post::find($id);
+        $user = auth()->user();
+        //$post = Post::find($id);
 
         return view('posts.show', compact('post','user'));
     }
@@ -111,11 +105,11 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        $user = Auth::user();
+        $user = auth()->user();
         if (!empty($user)) {
-            $post = Post::find($id);
+            //$post = Post::find($id);
             $categories = Category::all();
 
             return view('posts.edit', compact('post', 'categories'));
@@ -141,14 +135,9 @@ class PostsController extends Controller
         $post->meta_keywords = htmlspecialchars($request->meta_keywords);
         $post->meta_description = htmlspecialchars($request->meta_description);
 
-        if (!empty($request->image)) {
             if($request->hasFile('image')) {
-                $file = $request->file('image');
-                $newName = date('dWmYB');
-                $file->move(public_path() . '/images', $newName.'.img');
-                $post->image = '/images/'.$newName.'.img';
+                $post->image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
             }
-        }
 
         $post->save();
 
@@ -161,10 +150,11 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        $post = Post::find($id);
+        //$post = Post::findorfail($id);
         $post->delete();
-        return redirect('/posts');
+        //request()->sessions()->flash('message', "ZAEBIS");
+        return redirect('/posts')->with('success', "ZAEBIS");
     }
 }
