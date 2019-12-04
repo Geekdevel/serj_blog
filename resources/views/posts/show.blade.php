@@ -81,11 +81,11 @@
                 </div>
                 <div class="card-footer">
                     @if (!empty($user))
-                    <div class="row">
-                        <div class="col-6">
+                    <div class="row justify-content-center">
+                        <div class="col-6 text-center">
                             <a href="{{ route('posts.edit', $post->id)}}" class="btn btn-primary">EDIT</a>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 text-center">
                             <form action="{{ route('posts.destroy', $post->id)}}" method="POST">
                                 @csrf
                                 @method('DELETE')

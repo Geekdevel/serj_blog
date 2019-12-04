@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Category;
 use App\User;
+use App\Post;
 
 class CategoryController extends Controller
 {
@@ -17,8 +18,18 @@ class CategoryController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if (!empty($user)){
+        if (!empty($user) && $user->roles->role == 'admin'){
             $categories = Category::all();
+            return view('category.index', compact('user', 'categories'));
+        } elseif (!empty($user) && $user->roles->role == 'editor') {
+            $user = Auth::user();
+                $categories=[];
+                $posts = $user->posts;
+                foreach ($posts as $post)
+                {
+                    $categories[] = $post->category;
+                }
+            $categories = array_unique($categories);
             return view('category.index', compact('user', 'categories'));
         } else {
             return redirect('/neh');
@@ -86,8 +97,6 @@ class CategoryController extends Controller
 
                 foreach ($posts_all_cetegory as $post)
                 {
-                    /*var_dump($post->user->id);
-                    exit;*/
                     if (!empty($post->user->id) && $post->user->id == $user->id) {
                         $posts[] = $post;
                     }

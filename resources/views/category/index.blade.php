@@ -12,16 +12,20 @@
                 @endif
                 <div class="card-body">
                     <div class="row justify-content-center">
-                        <div class="col-12">
+                        <div class="col-6">
                             <table>
                                 <tr class="text-center">
                                     <th>Categories</th>
-                                    <th>Posts</th>
+                                    @if($user->roles->role == 'admin')
+                                        <th>Posts</th>
+                                    @endif
                                 </tr>
                                 @foreach ($categories as $category)
                                     <tr>
                                         <td><a href="/category/{{ $category->id }}">{{ $category->title }}</a></td>
-                                        <td class="text-center">{{ $category->posts->count() }}</td>
+                                        @if($user->roles->role == 'admin')
+                                            <td class="text-center">{{ $category->posts->count() }}</td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </table>

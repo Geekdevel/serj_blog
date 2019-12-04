@@ -17,7 +17,6 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //var_dump(Auth::user()->roles->role);
         if (!empty(Auth::user()->roles->role)){
             $role = Auth::user()->roles->role;
             if ($role == 'admin') {
@@ -33,8 +32,7 @@ class AdminController extends Controller
                 {
                     $categories[] = $post->category;
                 }
-                //var_dump($posts);
-                //$categories = Category::all();
+                $categories = array_unique($categories);
                 return view('admin.index', compact('role', 'user', 'categories'));
             } else {
                 return view('auth.register');
@@ -99,7 +97,6 @@ class AdminController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //var_dump($request);
         $user = User::find($id);
         $user->first_name = strip_tags($request->first_name);
         $user->last_name = strip_tags($request->last_name);

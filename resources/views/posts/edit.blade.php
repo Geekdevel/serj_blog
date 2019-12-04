@@ -28,7 +28,7 @@
                         </div>
 
                         <!-- Images upload -->
-                        <div class="row">
+                        <div class="row justify-content-center">
                             <div class="col-md-6 text-center">
                                 @if (!empty($post->image))
                                     <img src="{{ asset($post->image) }}" alt="image" style="width: 200px; height: 200px;">

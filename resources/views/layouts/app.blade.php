@@ -26,6 +26,15 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
+                <!-- Castom blok -->
+                @auth
+                    <div class="btn-group" role="group">
+                        <a href="/user" class="btn btn-secondary">HOME</a>
+                        <a href="/category" class="btn btn-secondary">CATEGORY</a>
+                        <a href="/posts" class="btn btn-secondary">POSTS</a>
+                    </div>
+                @endauth
+                <!-- end castom blok -->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>

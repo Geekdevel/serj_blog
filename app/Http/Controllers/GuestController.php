@@ -11,7 +11,6 @@ class GuestController extends Controller
     {
         $categories = Category::all();
 
-        //return var_dump($categories);
         return view('guest.index', compact('categories'));
     }
 }

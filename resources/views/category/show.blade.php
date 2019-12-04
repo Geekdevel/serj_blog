@@ -14,19 +14,23 @@
                     <h1>{{ $category->title }}</h1>
                 </div>
                 <div class="card-body text-center">
-                    <div class="row">
+                    <div class="row justify-content-center">
                         <div class="col-md-12 text-justifay">
                             {{ $category->description }}
                         </div>
                         @if (!empty($user))
-                            @if ($role == 'admin')
-                                <a href="category/{{ $category->id }}/edit" class="btn btn-success">EDIT</a>
-                                    <form action="{{ route('category.destroy', $category->id)}}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger" type="submit">DELETE</button>
-                                    </form>
-                            @endif
+                            <div class="row justify-content-center">
+                                <div class="col-12 btn-group">
+                                    @if ($role == 'admin')
+                                        <a href="category/{{ $category->id }}/edit" class="btn btn-success btn-secondary">EDIT</a>
+                                            <form action="{{ route('category.destroy', $category->id)}}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-danger btn-secondary" type="submit">DELETE</button>
+                                            </form>
+                                    @endif
+                                </div>
+                            </div>
                         @endif
                     </div>
                     @if (empty($aliarm))
@@ -51,16 +55,16 @@
                                             @endforeach
                                         </li>
                                     </ul>
-                                    <div class="card-body">
+                                    <div class="card-body btn-group">
                                         @if (!empty($user))
-                                            <a href="/posts/{{ $post->id }}/edit" class="btn btn-success">EDIT</a>
+                                            <a href="/posts/{{ $post->id }}/edit" class="btn btn-success btn-secondary">EDIT</a>
                                             <form action="{{ route('posts.destroy', $post->id)}}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button class="btn btn-danger" type="submit">DELETE</button>
+                                                <button class="btn btn-danger btn-secondary" type="submit">DELETE</button>
                                             </form>
                                         @endif
-                                        <a href="/posts/{{ $post->id }}" class="btn btn-primary">SHOW</a>
+                                        <a href="/posts/{{ $post->id }}" class="btn btn-primary btn-secondary">SHOW</a>
                                     </div>
                                 </div>
                             </div>

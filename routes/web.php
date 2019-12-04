@@ -11,15 +11,11 @@
 |
 */
 
-/*Route::get('/', function () {
-    return view('welcome');
-});*/
 Route::get('/', 'GuestController@index');
 Route::get('/neh', 'ErrorsController@neh');
 
 Auth::routes();
 
-//Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/user', 'AdminController');
 Route::resource('/category', 'CategoryController');
 Route::resource('/posts', 'PostsController');

@@ -62,12 +62,16 @@
                             <table>
                                 <tr class="text-center">
                                     <th>Categories</th>
+                                    @if ($role == 'admin')
                                     <th>Posts</th>
+                                    @endif
                                 </tr>
                                 @foreach ($categories as $category)
                                     <tr>
                                         <td><a href="/category/{{ $category->id }}">{{ $category->title }}</a></td>
+                                        @if ($role == 'admin')
                                         <td class="text-center">{{ $category->posts->count() }}</td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </table>
