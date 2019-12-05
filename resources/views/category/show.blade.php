@@ -49,7 +49,7 @@
                         @foreach ( $posts as $post )
                             <div class="row">
                                 <div class="card col-md-12">
-                                    <img class="card-img-top" src="{{ $post->image ? '/storage/'.$post->image : asset('images/NonIzo.png')}}" alt="{{ $post->title }}" style="margin: auto;">
+                                    <img class="" src="{{ $post->image ? '/storage/'.$post->image : asset('images/NonIzo.png')}}" alt="{{ $post->title }}" style="margin: auto;" width="200px">
                                     <div class="card-body">
                                         <h5 class="card-title">{!! $post->title !!}</h5>
                                         <p class="card-text">{!! $post->body !!}</p>

@@ -65,9 +65,6 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //var_dump($request->image);
-        //exit;
-
         if($request->hasFile('image')) {
             $image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
         }
@@ -82,29 +79,11 @@ class PostController extends Controller
             'author_id' => ['required'],
             'meta_keywords' => ['required', 'max:255'],
             'meta_description' => ['required']
-            //'image' => ['image', 'max:10000']
         ]);
-
-        //var_dump($data);
-        //exit;
 
         $data += ['image' => $image];
 
-        /*echo '<pre>';
-        var_dump($data);
-        echo '</pre>';
-        exit;*/
-
         $post = Post::create($data);
-
-        /*if($request->hasFile('image')) {
-            $post->image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
-        }
-        else {
-            $post->image = null;
-        }
-
-        $post->save();*/
 
         return redirect('/posts/'.$post->id);
     }
@@ -149,11 +128,6 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        /*echo '<pre>';
-        var_dump($post->image);
-        echo '</pre>';
-        exit;*/
-
         if($request->hasFile('image')) {
             $image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
         }
@@ -173,11 +147,6 @@ class PostController extends Controller
         if ($image) {
             $data += ['image' => $image];
         }
-
-        /*echo '<pre>';
-        var_dump($data);
-        echo '</pre>';
-        exit;*/
 
         $post->update($data);
 

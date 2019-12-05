@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@section('title')
+    Post creata
+@endsection
+
+@section('description')
+    This page post create
+@endsection
+
+@section('keywords')
+    post, create
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

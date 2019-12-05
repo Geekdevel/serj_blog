@@ -1,5 +1,18 @@
 @extends('layouts.app')
 
+@section('title')
+    Post: {{ $post->title }}
+@endsection
+
+@section('description')
+    {{ $post->meta_description }}
+@endsection
+
+@section('keywords')
+    {{ $post->meta_keywords }}
+@endsection
+
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -30,10 +43,10 @@
                         <!-- Images upload -->
                         <div class="row justify-content-center">
                             <div class="col-md-6 text-center">
-                                @if (!empty($post->image))
-                                    <img src="{{ asset($post->image) }}" alt="image" style="width: 200px; height: 200px;">
+                                @if ($post->image)
+                                    <img src="{{ asset($post->image) }}" alt="image" width="200px">
                                 @else
-                                    <img src="{{ asset('/images/NonIzo.png') }}" alt="image" style="width: 200px; height: 200px;">
+                                    <img src="{{ asset('/images/NonIzo.png') }}" alt="image" width="200px">
                                 @endif
                             </div>
                         </div>
@@ -62,7 +75,7 @@
                             <label for="body" class="col-md-4 col-form-label text-md-right">{{ __('Body') }}</label>
 
                             <div class="col-md-6">
-                                <textarea id="body" type="text" class="form-control @error('body') is-invalid @enderror" name="body" required autocomplete="body" autofocus>{{ $post->body }}</textarea>
+                                <textarea id="body" type="text" class="form-control @error('body') is-invalid @enderror" name="body" required autocomplete="body" autofocus>{!! $post->body !!}</textarea>
 
                                 @error('body')
                                     <span class="invalid-feedback" role="alert">
@@ -90,7 +103,7 @@
                             <label for="meta_description" class="col-md-4 col-form-label text-md-right">{{ __('Meta_description') }}</label>
 
                             <div class="col-md-6">
-                                <textarea id="meta_description" type="text" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" required autocomplete="meta_description">{{ $post->meta_description }}</textarea>
+                                <textarea id="meta_description" type="text" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" required autocomplete="meta_description">{!! $post->meta_description !!}</textarea>
 
                                 @error('meta_description')
                                     <span class="invalid-feedback" role="alert">

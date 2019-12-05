@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@section('title')
+    Blog test Laravel
+@endsection
+
+@section('description')
+    This first page blog.
+@endsection
+
+@section('keywords')
+    Blog, category, posts, list.
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

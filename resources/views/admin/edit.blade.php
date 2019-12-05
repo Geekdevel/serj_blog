@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@section('title')
+    Edit users
+@endsection
+
+@section('description')
+    This page edit users
+@endsection
+
+@section('keywords')
+    edit, users
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

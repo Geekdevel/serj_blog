@@ -118,8 +118,6 @@ class CategoryController extends Controller
         }
         else {
             $posts = $category->posts;
-            /*echo "User ne prishol";
-            exit;*/
             $user = null;
             return view('category.show', compact('category', 'posts', 'user'));
         }

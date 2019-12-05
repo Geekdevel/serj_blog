@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@section('title')
+    Users
+@endsection
+
+@section('description')
+    This page index admin.
+@endsection
+
+@section('keywords')
+    admin, index, user list.
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
