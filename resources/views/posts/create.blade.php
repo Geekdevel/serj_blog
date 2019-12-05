@@ -60,7 +60,7 @@
                             <label for="body" class="col-md-4 col-form-label text-md-right">{{ __('Body') }}</label>
 
                             <div class="col-md-6">
-                                <textarea id="body" type="text" class="form-control @error('body') is-invalid @enderror" name="body" value="{{ old('body') }}" required autocomplete="body" autofocus></textarea>
+                                <textarea id="body" type="text" class="form-control @error('body') is-invalid @enderror" name="body" required autocomplete="body" autofocus> {{ old('body') }} </textarea>
 
                                 @error('body')
                                     <span class="invalid-feedback" role="alert">
@@ -88,7 +88,7 @@
                             <label for="meta_description" class="col-md-4 col-form-label text-md-right">{{ __('Meta_description') }}</label>
 
                             <div class="col-md-6">
-                                <textarea id="meta_description" type="text" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" value="{{ old('meta_description') }}" required autocomplete="meta_description"></textarea>
+                                <textarea id="meta_description" type="text" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" required autocomplete="meta_description"> {{ old('meta_description') }} </textarea>
 
                                 @error('meta_description')
                                     <span class="invalid-feedback" role="alert">

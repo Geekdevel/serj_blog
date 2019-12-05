@@ -73,12 +73,13 @@ class PostController extends Controller
         }
 
         $data = $request->validate([
-            'title' => ['required', 'max:255'],
-            'body' => ['required'],
+            'title' => ['required', 'unique:posts,title', 'min:3', 'max:255'],
+            //'body' => ['required', 'min:5', 'regex:/(?!<script>.*</script>)/i'],
+            'body' => ['required', 'min:5'],
             'category_id' => ['required'],
             'author_id' => ['required'],
             'meta_keywords' => ['required', 'max:255'],
-            'meta_description' => ['required']
+            'meta_description' => ['required', 'min:5']
         ]);
 
         $data += ['image' => $image];
@@ -136,12 +137,12 @@ class PostController extends Controller
         }
 
         $data = $request->validate([
-            'title' => ['required', 'max:255'],
-            'body' => ['required'],
+            'title' => ['required', 'unique:posts,title,'.$post->id, 'min:3', 'max:255'],
+            'body' => ['required', 'min:5'],
             'category_id' => ['required'],
             'author_id' => ['required'],
             'meta_keywords' => ['required', 'max:255'],
-            'meta_description' => ['required']
+            'meta_description' => ['required', 'min:5']
         ]);
 
         if ($image) {
