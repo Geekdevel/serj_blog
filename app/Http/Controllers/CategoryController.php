@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
 use App\Category;
 use App\User;
 use App\Post;
@@ -17,12 +16,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        if (!empty($user) && $user->roles->role == 'admin'){
+        $user = auth()->user();
+        if ($user->roles->role == 'admin'){
             $categories = Category::all();
             return view('category.index', compact('user', 'categories'));
-        } elseif (!empty($user) && $user->roles->role == 'editor') {
-            $user = Auth::user();
+        } elseif ($user->roles->role == 'editor') {
                 $categories=[];
                 $posts = $user->posts;
                 foreach ($posts as $post)
@@ -43,9 +41,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $user = Auth::user();
-        if (!empty($user) && $user->roles->role == 'admin'){
-            $category = new Category();
+        $user = auth()->user();
+        if ($user->roles->role == 'admin'){
             return view('category.create', compact('user', 'category'));
         } else {
             return redirect('/neh');
@@ -60,14 +57,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $category = new Category();
-
-        $category->title = htmlspecialchars($request->title);
-        $category->description = htmlspecialchars($request->description);
-        $category->meta_keywords = htmlspecialchars($request->meta_keywords);
-        $category->meta_description = htmlspecialchars($request->meta_description);
-
-        $category->save();
+        $data = $request->validate([
+            'title' => ['required', 'alpha_dash', 'max:255'],
+            'description' => ['required', 'alpha_dash'],
+            'meta_keywords' => ['required', 'alpha_dash', 'max:255'],
+            'meta_description' => ['required', 'alpha_dash']
+        ]);
+        Category::create($data);
 
         return redirect('/category')->with('success', 'Category CREATE!');
     }
@@ -78,40 +74,40 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        if (!empty(Auth::user())) {
-            $role = Auth::user()->roles->role;
-            $user = Auth::user();
+        $user = auth()->user();
+        if ($user) {
+            $role = $user->roles->role;
 
             if ($role == 'admin') {
-                $category = Category::find($id);
                 $posts = $category->posts;
 
                 return view('category.show', compact('category', 'posts', 'user', 'role'));
 
-            } elseif ($role == 'editor') {
-                $category = Category::find($id);
+            }
+            elseif ($role == 'editor') {
                 $posts_all_cetegory = $category->posts;
                 $posts = [];
 
                 foreach ($posts_all_cetegory as $post)
                 {
-                    if (!empty($post->user->id) && $post->user->id == $user->id) {
+                    if ($post->user->id == $user->id) {
                         $posts[] = $post;
                     }
                 }
 
-                if (!empty($posts)){
+                if ($posts){
                     return view('category.show', compact('category', 'posts', 'user', 'role'));
-                } else {
+                }
+                else {
                     $aliarm = 'There are no your height in this category. Want to create?';
                     return view('category.show', compact('category', 'aliarm', 'user', 'role'));
                 }
 
             }
-        } else {
-            $category = Category::find($id);
+        }
+        else {
             $posts = $category->posts;
 
             return view('category.show', compact('category', 'posts'));
@@ -124,11 +120,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        $user = Auth::user();
-        if (!empty($user) && $user->roles->role == 'admin'){
-            $category = Category::find($id);
+        $user = auth()->user();
+        if ($user->roles->role == 'admin'){
             return view('category.edit', compact('user', 'category'));
         } else {
             return redirect('/view/errors/neh.php');
@@ -142,16 +137,15 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        $category = Category::find($id);
-
-        $category->title = htmlspecialchars($request->title);
-        $category->description = htmlspecialchars($request->description);
-        $category->meta_keywords = htmlspecialchars($request->meta_keywords);
-        $category->meta_description = htmlspecialchars($request->meta_description);
-
-        $category->save();
+        $data = $request->validate([
+            'title' => ['required', 'alpha_dash', 'max:255'],
+            'description' => ['required', 'alpha_dash'],
+            'meta_keywords' => ['required', 'alpha_dash', 'max:255'],
+            'meta_description' => ['required', 'alpha_dash']
+        ]);
+        $category->update($data);
 
         return redirect('/category/{{$category->id}}')->with('success', 'Category APDATE!');
     }
@@ -162,9 +156,8 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        $category = Category::find($id);
         $category->delete();
         return redirect('/user')->with('success', 'Category DELETE');
     }

@@ -60,10 +60,10 @@
 
                         @if ($role == 'admin')
                             <div class="form-group row">
-                                <label for="role" class="col-md-4 col-form-label text-md-right">{{ __('Role') }}</label>
+                                <label for="role_id" class="col-md-4 col-form-label text-md-right">{{ __('Role') }}</label>
 
                                 <div class="col-md-6">
-                                <select id="role" name="role">
+                                <select id="role_id" name="role_id">
                                     @foreach ($roles as $r)
                                         @if($r->id == $user->role_id)
                                             <option selected value="{{$r->id}}">{{$r->role}}</option>

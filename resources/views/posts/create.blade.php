@@ -9,13 +9,13 @@
                     <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                         @csrf
 
-                        <input id="user" type="text" name="user" value="{{ $user->id }}" hidden>
+                        <input id="author_id" type="text" name="author_id" value="{{ $user->id }}" hidden>
 
                         <div class="form-group row">
-                            <label for="category" class="col-md-4 col-form-label text-md-right">{{ __('Category') }}</label>
+                            <label for="category_id" class="col-md-4 col-form-label text-md-right">{{ __('Category') }}</label>
 
                             <div class="col-md-6">
-                                <select id="category" name="category">
+                                <select id="category_id" name="category_id">
                                     @foreach ($categories as $category)
                                         <option value="{{$category->id}}">{{$category->title}}</option>
                                     @endforeach

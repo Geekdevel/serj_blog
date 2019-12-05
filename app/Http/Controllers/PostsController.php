@@ -18,7 +18,7 @@ class PostController extends Controller
     {
         $posts = Post::all();
         $user = auth()->user();
-        if (!empty($user)) {
+        if ($user) {
             $role = $user->roles->role;
             if ($role == 'admin') {
                 return view('posts.index', compact('posts', 'role', 'user'));
@@ -64,23 +64,46 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = new Post();
-        $post->title = strip_tags($request->title);
-        $post->body =$request->body;
-        $post->category_id = strip_tags($request->category);
-        $post->author_id = $request->user;
-        $post->meta_keywords = htmlspecialchars($request->meta_keywords);
-        $post->meta_description = htmlspecialchars($request->meta_description);
-        //$post = Post::create($array);
+        //var_dump($request->image);
+        //exit;
 
-            if($request->hasFile('image')) {
-                $post->image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
-            }
-            else {
-                $post->image = null;
-            }
+        if($request->hasFile('image')) {
+            $image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
+        }
+        else {
+            $mage = null;
+        }
 
-        $post->save();
+        $data = $request->validate([
+            'title' => ['required', 'max:255'],
+            'body' => ['required'],
+            'category_id' => ['required'],
+            'author_id' => ['required'],
+            'meta_keywords' => ['required', 'max:255'],
+            'meta_description' => ['required']
+            //'image' => ['image', 'max:10000']
+        ]);
+
+        //var_dump($data);
+        //exit;
+
+        $data += ['image' => $image];
+
+        /*echo '<pre>';
+        var_dump($data);
+        echo '</pre>';
+        exit;*/
+
+        $post = Post::create($data);
+
+        /*if($request->hasFile('image')) {
+            $post->image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
+        }
+        else {
+            $post->image = null;
+        }
+
+        $post->save();*/
 
         return redirect('/posts/'.$post->id);
     }
@@ -94,7 +117,6 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $user = auth()->user();
-        //$post = Post::find($id);
 
         return view('posts.show', compact('post','user'));
     }
@@ -108,8 +130,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $user = auth()->user();
-        if (!empty($user)) {
-            //$post = Post::find($id);
+        if ($user) {
             $categories = Category::all();
 
             return view('posts.edit', compact('post', 'categories'));
@@ -125,23 +146,29 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        $post = Post::find($id);
-        $post->title = strip_tags($request->title);
-        $post->body = htmlspecialchars($request->body);
-        $post->category_id = strip_tags($request->category);
-        $post->author_id = $request->user;
-        $post->meta_keywords = htmlspecialchars($request->meta_keywords);
-        $post->meta_description = htmlspecialchars($request->meta_description);
+        if($request->hasFile('image')) {
+            $image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
+        }
+        else {
+            $mage = null;
+        }
 
-            if($request->hasFile('image')) {
-                $post->image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
-            }
+        $data = $request->validate([
+            'title' => ['required', 'max:255'],
+            'body' => ['required'],
+            'category_id' => ['required'],
+            'author_id' => ['required'],
+            'meta_keywords' => ['required', 'max:255'],
+            'meta_description' => ['required']
+        ]);
 
-        $post->save();
+        $data += ['image' => $image];
 
-        return redirect('/posts/'.$post->id);
+        $post->update($data);
+
+        return redirect('/posts/'.$post->id)->with('success', "Post UPDATE");
     }
 
     /**
@@ -152,9 +179,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //$post = Post::findorfail($id);
         $post->delete();
-        //request()->sessions()->flash('message', "ZAEBIS");
-        return redirect('/posts')->with('success', "ZAEBIS");
+        return redirect('/posts')->with('success', "Post DELETED");
     }
 }

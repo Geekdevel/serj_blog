@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
 use App\Category;
 use App\User;
 use App\Role;
@@ -17,15 +16,15 @@ class AdminController extends Controller
      */
     public function index()
     {
-        if (!empty(Auth::user()->roles->role)){
-            $role = Auth::user()->roles->role;
+        if (auth()->user()->roles->role){
+            $role = auth()->user()->roles->role;
             if ($role == 'admin') {
                 $categories = Category::all();
                 $users = User::all();
-                $user = Auth::user();
+                $user = auth()->user();
                 return view('admin.index', compact('role', 'users', 'user', 'categories'));
             } elseif ($role == 'editor') {
-                $user = Auth::user();
+                $user = auth()->user();
                 $categories=[];
                 $posts = $user->posts;
                 foreach ($posts as $post)
@@ -80,10 +79,9 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        $role = Auth::user()->roles->role;
-        $user = User::find($id);
+        $role = auth()->user()->roles->role;
         $roles = Role::all();
         return view('admin.edit', compact('user', 'role', 'roles'));
     }
@@ -95,18 +93,16 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::find($id);
-        $user->first_name = strip_tags($request->first_name);
-        $user->last_name = strip_tags($request->last_name);
-        $user->email = strip_tags($request->email);
+        $data = $request->validate([
+            'first_name' => ['required', 'alpha', 'string', 'max:255'],
+            'last_name' => ['required', 'alpha', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'role_id' => ['required', 'integer']
+        ]);
 
-        if (!empty($request->role)) {
-            $user->role_id = $request->role;
-        }
-
-        $user->save();
+        $user->update($data);
 
         return redirect('/user')->with('success', 'User edit');
     }
@@ -117,9 +113,8 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::find($id);
         $user->delete();
         return redirect('/user')->with('success', 'User DELETE');
     }
