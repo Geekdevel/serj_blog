@@ -7,7 +7,15 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    {{--<title>{{ config('app.name', 'Laravel') }}</title>--}}
+
+    <!-- Meta tegs castom -->
+    <title>
+        @yield('title', 'Blog test')
+    </title>
+    <meta name="description" content="@yield('description', 'This test blog')" />
+    <meta name="keywords" content="@yield('keywords', 'Blog, category, posts')" />
+    <!-- end meta tegs castom -->
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>

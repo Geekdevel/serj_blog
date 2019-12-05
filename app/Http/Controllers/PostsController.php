@@ -35,7 +35,8 @@ class PostController extends Controller
                 return redirect('/neh');
             }
         } else {
-            return view('posts.index', compact('posts'));
+            $user = null;
+            return view('posts.index', compact('posts', 'user'));
         }
     }
 
@@ -148,11 +149,16 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        /*echo '<pre>';
+        var_dump($post->image);
+        echo '</pre>';
+        exit;*/
+
         if($request->hasFile('image')) {
             $image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
         }
         else {
-            $mage = null;
+            $image = $post->image;
         }
 
         $data = $request->validate([
@@ -164,7 +170,14 @@ class PostController extends Controller
             'meta_description' => ['required']
         ]);
 
-        $data += ['image' => $image];
+        if ($image) {
+            $data += ['image' => $image];
+        }
+
+        /*echo '<pre>';
+        var_dump($data);
+        echo '</pre>';
+        exit;*/
 
         $post->update($data);
 

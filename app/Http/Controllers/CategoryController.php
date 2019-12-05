@@ -16,21 +16,24 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-        if ($user->roles->role == 'admin'){
-            $categories = Category::all();
-            return view('category.index', compact('user', 'categories'));
-        } elseif ($user->roles->role == 'editor') {
-                $categories=[];
-                $posts = $user->posts;
-                foreach ($posts as $post)
-                {
-                    $categories[] = $post->category;
-                }
-            $categories = array_unique($categories);
-            return view('category.index', compact('user', 'categories'));
+        if ($user = auth()->user()) {
+            if ($user->roles->role == 'admin'){
+                $categories = Category::all();
+                return view('category.index', compact('user', 'categories'));
+            } elseif ($user->roles->role == 'editor') {
+                    $categories=[];
+                    $posts = $user->posts;
+                    foreach ($posts as $post)
+                    {
+                        $categories[] = $post->category;
+                    }
+                $categories = array_unique($categories);
+                return view('category.index', compact('user', 'categories'));
+            } else {
+                return redirect('/neh');
+            }
         } else {
-            return redirect('/neh');
+            return redirect('/');
         }
     }
 
@@ -41,9 +44,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $user = auth()->user();
-        if ($user->roles->role == 'admin'){
-            return view('category.create', compact('user', 'category'));
+        if (auth()->user()->roles->role == 'admin'){
+            $user = auth()->user();
+            return view('category.create', compact('user'));
         } else {
             return redirect('/neh');
         }
@@ -58,10 +61,10 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title' => ['required', 'alpha_dash', 'max:255'],
-            'description' => ['required', 'alpha_dash'],
-            'meta_keywords' => ['required', 'alpha_dash', 'max:255'],
-            'meta_description' => ['required', 'alpha_dash']
+            'title' => ['required', 'max:255'],
+            'description' => ['required'],
+            'meta_keywords' => ['required', 'max:255'],
+            'meta_description' => ['required']
         ]);
         Category::create($data);
 
@@ -83,7 +86,13 @@ class CategoryController extends Controller
             if ($role == 'admin') {
                 $posts = $category->posts;
 
-                return view('category.show', compact('category', 'posts', 'user', 'role'));
+                if (sizeof($posts)) {
+                    return view('category.show', compact('category', 'posts', 'user', 'role'));
+                }
+                else {
+                    $aliarm = 'There are no your height in this category. Want to create?';
+                    return view('category.show', compact('category', 'aliarm', 'user', 'role'));
+                }
 
             }
             elseif ($role == 'editor') {
@@ -109,8 +118,10 @@ class CategoryController extends Controller
         }
         else {
             $posts = $category->posts;
-
-            return view('category.show', compact('category', 'posts'));
+            /*echo "User ne prishol";
+            exit;*/
+            $user = null;
+            return view('category.show', compact('category', 'posts', 'user'));
         }
     }
 
@@ -123,10 +134,10 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         $user = auth()->user();
-        if ($user->roles->role == 'admin'){
+        if ($user && $user->roles->role == 'admin'){
             return view('category.edit', compact('user', 'category'));
         } else {
-            return redirect('/view/errors/neh.php');
+            return redirect('/neh');
         }
     }
 
@@ -140,14 +151,14 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $data = $request->validate([
-            'title' => ['required', 'alpha_dash', 'max:255'],
-            'description' => ['required', 'alpha_dash'],
-            'meta_keywords' => ['required', 'alpha_dash', 'max:255'],
-            'meta_description' => ['required', 'alpha_dash']
+            'title' => ['required', 'max:255'],
+            'description' => ['required'],
+            'meta_keywords' => ['required', 'max:255'],
+            'meta_description' => ['required']
         ]);
         $category->update($data);
 
-        return redirect('/category/{{$category->id}}')->with('success', 'Category APDATE!');
+        return redirect('/category/'.$category->id)->with('success', 'Category APDATE!');
     }
 
     /**

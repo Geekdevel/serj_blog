@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@section('title')
+    Edit category: {{ $category->title }}
+@endsection
+
+@section('description')
+    {{ $category->meta_description }}
+@endsection
+
+@section('keywords')
+    {{ $category->meta_keywords }}
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -12,7 +24,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="/category/{{$category->id}}">
+                        <form method="POST" action="{{ route('category.update', $category->id) }}">
                             @method ( 'PUT')
                             @csrf
 
@@ -34,7 +46,7 @@
                                 <label for="description" class="col-md-4 col-form-label text-md-right">{{ __('Description') }}</label>
 
                                 <div class="col-md-6">
-                                    <textarea id="description" type="textarea" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ $category->description }}" required autocomplete="description" autofocus></textarea>
+                                    <textarea id="description" type="textarea" class="form-control @error('description') is-invalid @enderror" name="description" required autocomplete="description" autofocus>{{ $category->description }}</textarea>
 
                                     @error('description')
                                         <span class="invalid-feedback" role="alert">
@@ -62,7 +74,7 @@
                                 <label for="meta_description" class="col-md-4 col-form-label text-md-right">{{ __('Meta_description') }}</label>
 
                                 <div class="col-md-6">
-                                    <textarea id="meta_description" type="textarea" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" value="{{ $category->meta_description }}" required autocomplete="meta_description"></textarea>
+                                    <textarea id="meta_description" type="textarea" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" required autocomplete="meta_description">{{ $category->meta_description }}</textarea>
 
                                     @error('meta_description')
                                         <span class="invalid-feedback" role="alert">
