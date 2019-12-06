@@ -61,10 +61,10 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title' => ['required', 'max:255'],
-            'description' => ['required'],
+            'title' => ['required', 'unique:categories,title', 'min:3', 'max:255'],
+            'description' => ['required', 'min:5'],
             'meta_keywords' => ['required', 'max:255'],
-            'meta_description' => ['required']
+            'meta_description' => ['required', 'min:3']
         ]);
         Category::create($data);
 
@@ -149,7 +149,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $data = $request->validate([
-            'title' => ['required', 'max:255'],
+            'title' => ['required', 'unique:categories,title'.$category->id, 'min:3', 'max:255'],
             'description' => ['required'],
             'meta_keywords' => ['required', 'max:255'],
             'meta_description' => ['required']
