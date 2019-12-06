@@ -20,5 +20,5 @@ Auth::routes();
 Route::resource('/user', 'AdminController');
 Route::resource('/category', 'CategoryController');
 Route::resource('/posts', 'PostController');
-//Route::resource('/tag', 'TagController');
-Route::post('/tag', 'TagController@addTag');
+Route::resource('/tag', 'TagController');
+//Route::post('/tag', 'TagController@addTag');

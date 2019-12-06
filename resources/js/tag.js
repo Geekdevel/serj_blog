@@ -4,7 +4,7 @@ tag.addEventListener('click', function(e){
     e.preventDefault();
     var url = window.location.toString();
     arr = url.split('/');
-    var id = returnLastItem(arr);
+    var post_id = returnLastItem(arr);
     var input = document.querySelector('#title');
     var title = input.value;
     //console.log(id, title);
@@ -20,11 +20,10 @@ tag.addEventListener('click', function(e){
             url: "/tag",
             data: {
                 'title' : title,
-                'id' : id
+                'post_id' : post_id
             },
             cache: false,
             success: function(data){
-                //console.log(data);
                 console.log(data);
             }
         });

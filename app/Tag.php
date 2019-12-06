@@ -7,8 +7,12 @@ use Post;
 
 class Tag extends Model
 {
-    public function post()
+    protected $fillable = [
+        'title'
+    ];
+
+    public function posts()
     {
-        return $this->belongsTo('App\Post', 'post_tags', 'tag_id', 'post_id');
+        return $this->belongsToMany('App\Post', 'post_tags');
     }
 }
