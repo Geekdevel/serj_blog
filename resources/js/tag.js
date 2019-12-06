@@ -1,4 +1,5 @@
 var tag = document.querySelector('#add_tag');
+var tags_show = document.getElementById('tags_show');
 
 tag.addEventListener('click', function(e){
     e.preventDefault();
@@ -24,6 +25,7 @@ tag.addEventListener('click', function(e){
             },
             cache: false,
             success: function(data){
+                input.value='';
                 console.log(data);
             }
         });

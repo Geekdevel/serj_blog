@@ -84,7 +84,12 @@ class TagController extends Controller
 
         $new_post_tags = Post::find($post_id);
 
-        return var_dump($new_post_tags->tags);
+        $new_tags = [];
+        foreach ($new_post_tags->tags as $value) {
+            $new_tags[] = $value->title;
+        }
+
+        return var_dump($new_tags);
     }
 
     /**

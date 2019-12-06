@@ -94,6 +94,7 @@
 /***/ (function(module, exports) {
 
 var tag = document.querySelector('#add_tag');
+var tags_show = document.getElementById('tags_show');
 tag.addEventListener('click', function (e) {
   e.preventDefault();
   var url = window.location.toString();
@@ -116,6 +117,7 @@ tag.addEventListener('click', function (e) {
     },
     cache: false,
     success: function success(data) {
+      input.value = '';
       console.log(data);
     }
   });

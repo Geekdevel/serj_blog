@@ -67,21 +67,24 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <p style="text-align: center;"> Tags:
-                                @if ($post->tags)
-                                    @foreach ($post->tags as $tag)
-                                        <a href="#">{{ $tag->title }}</a>
-                                    @endforeach
-                                @endif
-                            </p>
+                            <p style="text-align: center;"> Tags:</p>
+                            @guest
+                                <p style="text-align: center;">
+                                    @if ($post->tags)
+                                        @foreach ($post->tags as $tag)
+                                            <a href="#">{{ $tag->title }}</a>
+                                        @endforeach
+                                    @endif
+                                </p>
+                            @endguest
+                            @auth
+                                <p style="text-align: center;" id="tags_show">
+
+                                </p>
+                            @endauth
                         </div>
                     </div>
                     @if ($user)
-                        {{--<div class="row justify-content-center">
-                            <div class="col-6 text-center">
-                                <a href="#" id="add_tag" class="btn btn-primary">ADD TAG</a>
-                            </div>
-                        </div>--}}
                         <div class="row justify-content-center">
                             <div class="col-8">
                                 <form action="#" method="POST">
