@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
+    public function addTag(Request $request)
+    {
+        var_dump([$request->title, $request->id]);
+        exit;
+        //return $request->data;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -34,7 +40,7 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return var_dump($request);
     }
 
     /**
