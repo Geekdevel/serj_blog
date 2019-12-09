@@ -9,6 +9,22 @@ use App\Post;
 
 class TagController extends Controller
 {
+    public function listTag(Request $request)
+    {
+        //var_dump($request->post_id);
+        //exit;
+        $post = Post::find($request->post_id);
+        $tags = $post->tags;
+        $returned = [];
+        foreach ($tags as $tag) {
+            $returned[] = $tag->title;
+        }
+        $returned = implode(', ', $returned);
+        //var_dump($returned);
+        //exit;
+        return $returned;
+    }
+
     /*public function addTag(Request $request)
     {
 
