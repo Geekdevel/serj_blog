@@ -26,7 +26,6 @@ class AdminController extends Controller
             } elseif ($role == 'editor') {
                 $user = auth()->user();
                 $categories=[];
-                $posts = $user->posts;
                 foreach ($posts as $post)
                 {
                     $categories[] = $post->category;

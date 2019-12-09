@@ -8,6 +8,6 @@ class ErrorsController extends Controller
 {
     public function neh()
     {
-        return view('errors.neh');
+       abort(404);
     }
 }

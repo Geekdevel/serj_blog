@@ -23,63 +23,13 @@ class TagController extends Controller
         return $returned;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function addTag(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        /*echo 'This is store';
-        echo "<br/>";
-        var_dump([$request->title, $request->post_id]);
-        exit;*/
-
-        /*$title = $request->title;
-        $post_id = $request->post_id;
-
-        $tag = new Tag();
-
-        $tag->title = $title;
-        $tag->save();
-
-        $tag_id = $tag->id;
-
-        $post_tag = new Post_tag();
-        $post_tag->tag_id = $tag_id;
-        $post_tag->post_id = $post_id;
-        $post_tag->save();
-
-        $new_post_tag = Post::find($post_id);
-
-        return var_dump($new_post_tag->title);*/
-
         $data = $request->validate([
-            'title' => ['required', 'unique:tags,title', 'min:3', 'max:255']
+            'title' => ['required', 'min:3', 'max:255']
         ]);
 
-        $tag = Tag::create($data);
+        $tag = Tag::firstorcreate($data);
 
         $post_id = $request->post_id;
 
@@ -100,14 +50,71 @@ class TagController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $tags = Tag::all();
+        return view('tag.index', compact('tags'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        if (auth()->user()) {
+            $posts = Post::all();
+            $posts = $posts->pluck('title', 'id');
+            return view('tag.create', compact('posts'));
+        }
+        else {
+            return redirect('/neh');
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $post_id = $request->post_id;
+
+        $data = $request->validate([
+            'title' => ['required', 'unique:tags,title', 'min:3', 'max:255']
+        ]);
+
+        $tag = Tag::create($data);
+
+        $tag_id = $tag->id;
+
+        foreach ($post_id as $value) {
+            $data_new = [];
+            $data_new += ['post_id' => $value];
+            $data_new += ['tag_id' => $tag_id];
+
+            Post_tag::create($data_new);
+        }
+
+        return redirect('/tag/'.$tag_id)->with('success', "Tag CREATE");
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Tag $tag)
     {
-        //
+        return view('tag.show', compact('tag'));
     }
 
     /**
@@ -116,9 +123,15 @@ class TagController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Tag $tag)
     {
-        //
+        if (auth()->user()){
+            $posts = Post::all();
+            return view('tag.edit', compact('tag', 'posts'));
+        }
+        else {
+            return redirect('/neh');
+        }
     }
 
     /**

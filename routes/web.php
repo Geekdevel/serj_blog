@@ -22,4 +22,4 @@ Route::resource('/category', 'CategoryController');
 Route::resource('/posts', 'PostController');
 Route::resource('/tag', 'TagController');
 Route::post('/tag/list', 'TagController@listTag');
-//Route::post('/tag', 'TagController@addTag');
+Route::post('/tag/add', 'TagController@addTag');

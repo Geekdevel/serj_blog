@@ -23,7 +23,7 @@ tag.addEventListener('click', function(e){
 
     $.ajax({
             type: "POST",
-            url: "/tag",
+            url: "/tag/add",
             data: {
                 'title' : title,
                 'post_id' : post_id

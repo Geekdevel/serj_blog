@@ -81,81 +81,39 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./resources/js/tag.js":
-/*!*****************************!*\
-  !*** ./resources/js/tag.js ***!
-  \*****************************/
+/***/ "./resources/js/addtag.js":
+/*!********************************!*\
+  !*** ./resources/js/addtag.js ***!
+  \********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-$.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-});
-var tag = document.querySelector('#add_tag');
-var tags_show = document.getElementById('tags_show');
-var url = window.location.toString();
-arr = url.split('/');
-var post_id = returnLastItem(arr);
-
-window.onload = function () {
-  getListTags();
-};
-
+var tag = document.querySelector('#tag_add');
+var post_id = document.querySelector('.post_id');
+var post = document.querySelector('.post');
 tag.addEventListener('click', function (e) {
   e.preventDefault();
-  var input = document.querySelector('#title');
-  var title = input.value;
-  $.ajax({
-    type: "POST",
-    url: "/tag/add",
-    data: {
-      'title': title,
-      'post_id': post_id
-    },
-    cache: false,
-    success: function success(data) {
-      input.value = '';
-      tags_show.innerHTML = '';
-      getListTags();
-    }
-  });
+  post_id_next = post_id.cloneNode(true);
+  post_id.after(post_id_next);
+  console.log('add!');
+  console.log(post.value);
 });
-
-function returnLastItem(arr) {
-  return arr[arr.length - 1];
-}
-
-function getListTags() {
-  $.ajax({
-    type: "POST",
-    url: "/tag/list",
-    data: {
-      'post_id': post_id
-    },
-    cache: false,
-    success: function success(data) {
-      tags_show.innerHTML = data;
-    }
-  });
-}
 
 /***/ }),
 
-/***/ 1:
-/*!***********************************!*\
-  !*** multi ./resources/js/tag.js ***!
-  \***********************************/
+/***/ 2:
+/*!**************************************!*\
+  !*** multi ./resources/js/addtag.js ***!
+  \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/maccube/projects/blogtest/resources/js/tag.js */"./resources/js/tag.js");
+module.exports = __webpack_require__(/*! /Users/maccube/projects/blogtest/resources/js/addtag.js */"./resources/js/addtag.js");
 
 
 /***/ })

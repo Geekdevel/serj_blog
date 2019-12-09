@@ -11,6 +11,6 @@ class GuestController extends Controller
     {
         $categories = Category::all();
 
-        return view('guest.index', compact('categories'));
+        return view('guest.index', ['categories'=>$categories]);
     }
 }

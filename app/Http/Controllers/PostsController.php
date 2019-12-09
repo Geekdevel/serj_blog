@@ -16,26 +16,20 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+
         $user = auth()->user();
         if ($user) {
             $role = $user->roles->role;
             if ($role == 'admin') {
+                $posts = Post::all();
                 return view('posts.index', compact('posts', 'role', 'user'));
             } elseif ($role == 'editor') {
-                $posts_sort = [];
-                foreach ($posts as $post) {
-                    if ($user->id == $post->author_id) {
-                        $posts_sort[] = $post;
-                    }
-                }
-                $posts = $posts_sort;
+                $posts = Post::where('author_id', $user->id)->get();
                 return view('posts.index', compact('posts', 'role', 'user'));
             } else {
                 return redirect('/neh');
             }
         } else {
-            $user = null;
             return view('posts.index', compact('posts', 'user'));
         }
     }
@@ -69,7 +63,7 @@ class PostController extends Controller
             $image = $request->image->storeAs('images',date('dWmYB').'.'.$request->image->extension(),'public');
         }
         else {
-            $mage = null;
+            $image = null;
         }
 
         $data = $request->validate([
@@ -77,12 +71,12 @@ class PostController extends Controller
             //'body' => ['required', 'min:5', 'regex:/(?!<script>.*</script>)/i'],
             'body' => ['required', 'min:5'],
             'category_id' => ['required'],
-            'author_id' => ['required'],
+            //'author_id' => ['required'],
             'meta_keywords' => ['required', 'max:255'],
             'meta_description' => ['required', 'min:5']
         ]);
 
-        $data += ['image' => $image];
+        $data += ['image' => $image,'author_id'=>auth()->id()];
 
         $post = Post::create($data);
 

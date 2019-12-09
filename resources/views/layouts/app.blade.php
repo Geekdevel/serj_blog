@@ -24,6 +24,9 @@
         @if(Route::currentRouteName() == 'posts.show')
             <script src="{{ asset('js/tag.js') }}" defer></script>
         @endif
+        @if(Route::currentRouteName() == 'tag.create')
+            <script src="{{ asset('js/addtag.js') }}" defer></script>
+        @endif
     @endauth
 
     <!-- Fonts -->
