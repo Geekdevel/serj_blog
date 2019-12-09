@@ -63,7 +63,7 @@
                                         <li class="list-group-item">
                                             Tags:
                                             @foreach ($post->tags as $tag)
-                                                <a href="#">{{$tag->title}}</a>
+                                                <a href="/tag/{{ $tag->id }}">{{$tag->title}}</a>
                                             @endforeach
                                         </li>
                                     </ul>

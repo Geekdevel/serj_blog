@@ -103,30 +103,15 @@ var tags_show = document.getElementById('tags_show');
 var url = window.location.toString();
 arr = url.split('/');
 var post_id = returnLastItem(arr);
-/*document.addEventListener("DOMContentLoaded", function(){
-    console.log('LOAD!');
-});*/
 
 window.onload = function () {
   getListTags();
-  console.log('LOAD!');
 };
-/*console.log('fjahfjd');
-
-if (document.readyState == 'loading') {
-  document.addEventListener('DOMContentLoaded', function(){
-    console.log('DOM');
-  });
-} else {
-  console.log('ELSE');
-}*/
-
 
 tag.addEventListener('click', function (e) {
   e.preventDefault();
   var input = document.querySelector('#title');
-  var title = input.value; //console.log(id, title);
-
+  var title = input.value;
   $.ajax({
     type: "POST",
     url: "/tag",
@@ -137,7 +122,8 @@ tag.addEventListener('click', function (e) {
     cache: false,
     success: function success(data) {
       input.value = '';
-      console.log(data);
+      tags_show.innerHTML = '';
+      getListTags();
     }
   });
 });
@@ -156,7 +142,6 @@ function getListTags() {
     cache: false,
     success: function success(data) {
       tags_show.innerHTML = data;
-      console.log(data);
     }
   });
 }

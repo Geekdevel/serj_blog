@@ -72,7 +72,7 @@
                                 <p style="text-align: center;">
                                     @if ($post->tags)
                                         @foreach ($post->tags as $tag)
-                                            <a href="#">{{ $tag->title }}</a>
+                                            <a href="/tag/{{ $tag->id }}">{{ $tag->title }}</a>
                                         @endforeach
                                     @endif
                                 </p>
