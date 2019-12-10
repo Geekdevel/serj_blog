@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
-use App\User;
 use App\Post;
 
 class PostController extends Controller
@@ -16,22 +15,14 @@ class PostController extends Controller
      */
     public function index()
     {
-
         $user = auth()->user();
-        if ($user) {
-            $role = $user->roles->role;
-            if ($role == 'admin') {
-                $posts = Post::all();
-                return view('posts.index', compact('posts', 'role', 'user'));
-            } elseif ($role == 'editor') {
-                $posts = Post::where('author_id', $user->id)->get();
-                return view('posts.index', compact('posts', 'role', 'user'));
-            } else {
-                return redirect('/neh');
-            }
-        } else {
-            return view('posts.index', compact('posts', 'user'));
+        if ($user->roles->role == 'editor') {
+            $posts = $user->posts;
         }
+        else {
+            $posts = Post::all();
+        }
+        return view('posts.index', ['posts' => $posts]);
     }
 
     /**
@@ -41,10 +32,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        $user = auth()->user();
-        if ($user) {
+        if (auth()->user()) {
             $categories = Category::all();
-            return view('posts.create', compact('categories', 'user'));
+            return view('posts.create', ['categories' => $categories]);
         } else {
             return redirect('/neh');
         }
@@ -68,15 +58,12 @@ class PostController extends Controller
 
         $data = $request->validate([
             'title' => ['required', 'unique:posts,title', 'min:3', 'max:255'],
-            //'body' => ['required', 'min:5', 'regex:/(?!<script>.*</script>)/i'],
-            'body' => ['required', 'min:5'],
-            'category_id' => ['required'],
-            //'author_id' => ['required'],
-            'meta_keywords' => ['required', 'max:255'],
-            'meta_description' => ['required', 'min:5']
+            'body' => ['required', 'min:5', 'max:10000'],
+            'meta_keywords' => ['required', 'min:3', 'max:255'],
+            'meta_description' => ['required', 'min:5', 'max:255']
         ]);
 
-        $data += ['image' => $image,'author_id'=>auth()->id()];
+        $data += ['image' => $image, 'author_id'=>auth()->id(), 'category_id'=>$request->category_id];
 
         $post = Post::create($data);
 
@@ -91,9 +78,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $user = auth()->user();
-
-        return view('posts.show', compact('post','user'));
+        return view('posts.show', ['post' => $post]);
     }
 
     /**
@@ -104,11 +89,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        $user = auth()->user();
-        if ($user) {
+        if (auth()->user()) {
             $categories = Category::all();
-
-            return view('posts.edit', compact('post', 'categories'));
+            return view('posts.edit', ['categories' => $categories, 'post' => $post]);
         } else {
             return redirect('/neh');
         }
@@ -132,16 +115,11 @@ class PostController extends Controller
 
         $data = $request->validate([
             'title' => ['required', 'unique:posts,title,'.$post->id, 'min:3', 'max:255'],
-            'body' => ['required', 'min:5'],
-            'category_id' => ['required'],
-            'author_id' => ['required'],
-            'meta_keywords' => ['required', 'max:255'],
-            'meta_description' => ['required', 'min:5']
+            'body' => ['required', 'min:5', 'max:10000'],
+            'meta_keywords' => ['required', 'min:3', 'max:255'],
+            'meta_description' => ['required', 'min:5', 'max:255']
         ]);
-
-        if ($image) {
-            $data += ['image' => $image];
-        }
+        $data += ['image' => $image, 'author_id'=>auth()->id(), 'category_id'=>$request->category_id];
 
         $post->update($data);
 

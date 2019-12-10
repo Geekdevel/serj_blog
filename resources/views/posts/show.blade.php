@@ -17,13 +17,14 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                @if ($user)
-                    <div class="card-header text-center">Welcome to {{ mb_strtoupper($user->roles->role) }} {{ $user->first_name.' '.$user->last_name }}</div>
-                @else
+                @auth
+                    <div class="card-header text-center">Welcome to {{ mb_strtoupper(auth()->user()->roles->role) }} {{ auth()->user()->first_name.' '.auth()->user()->last_name }}</div>
+                @endauth
+                @guest
                     <div class="card-header text-center">Welcome to post!</div>
-                @endif
-                <h3>
-                    Category:
+                @endguest
+                <h3 class="text-center">
+                    Category: <br/>
                     <a href="
                         @if ($post->category)
                         /category/{{$post->category_id}}
@@ -84,7 +85,7 @@
                             @endauth
                         </div>
                     </div>
-                    @if ($user)
+                    @auth
                         <div class="row justify-content-center">
                             <div class="col-8">
                                 <form action="#" method="POST">
@@ -115,10 +116,10 @@
                                 </form>
                             </div>
                         </div>
-                    @endif
+                    @endauth
                 </div>
                 <div class="card-footer">
-                    @if ($user)
+                    @auth
                     <div class="row justify-content-center">
                         <div class="col-6 text-center">
                             <a href="{{ route('posts.edit', $post->id)}}" class="btn btn-primary">EDIT</a>
@@ -131,7 +132,7 @@
                             </form>
                         </div>
                     </div>
-                    @endif
+                    @endauth
                 </div>
             </div>
         </div>

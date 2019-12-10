@@ -21,8 +21,6 @@
                     <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                         @csrf
 
-                        <input id="author_id" type="text" name="author_id" value="{{ $user->id }}" hidden>
-
                         <div class="form-group row">
                             <label for="category_id" class="col-md-4 col-form-label text-md-right">{{ __('Category') }}</label>
 
