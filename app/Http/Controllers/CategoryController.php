@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
-use App\User;
-use App\Post;
 
 class CategoryController extends Controller
 {
@@ -16,24 +14,17 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        if ($user = auth()->user()) {
-            if ($user->roles->role == 'admin'){
-                $categories = Category::all();
-                return view('category.index', compact('user', 'categories'));
-            } elseif ($user->roles->role == 'editor') {
-                    $categories=[];
-                    $posts = $user->posts;
-                    foreach ($posts as $post)
-                    {
-                        $categories[] = $post->category;
-                    }
-                $categories = array_unique($categories);
-                return view('category.index', compact('user', 'categories'));
-            } else {
-                return redirect('/neh');
-            }
-        } else {
-            return redirect('/');
+        $user = auth()->user();
+        if ($user && $user->roles->role == 'admin') {
+            $categories = Category::all();
+            return view('category.index', ['categories' => $categories]);
+        }
+        elseif ($user && $user->roles->role == 'editor') {
+            $categories = $user->categories->unique();
+            return view('category.index', ['categories' => $categories]);
+        }
+        else {
+            return redirect('/neh');
         }
     }
 
@@ -44,9 +35,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        if (auth()->user()->roles->role == 'admin'){
-            $user = auth()->user();
-            return view('category.create', compact('user'));
+        $user = auth()->user();
+        if ($user && $user->roles->role == 'admin'){
+            return view('category.create');
         } else {
             return redirect('/neh');
         }
@@ -62,9 +53,9 @@ class CategoryController extends Controller
     {
         $data = $request->validate([
             'title' => ['required', 'unique:categories,title', 'min:3', 'max:255'],
-            'description' => ['required', 'min:5'],
-            'meta_keywords' => ['required', 'max:255'],
-            'meta_description' => ['required', 'min:3']
+            'description' => ['required', 'min:5', 'max:10000'],
+            'meta_keywords' => ['required', 'min:3', 'max:255'],
+            'meta_description' => ['required', 'min:3', 'max:255']
         ]);
         Category::create($data);
 
@@ -79,48 +70,14 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $user = auth()->user();
-        if ($user) {
-            $role = $user->roles->role;
-
-            if ($role == 'admin') {
-                $posts = $category->posts;
-
-                if (sizeof($posts)) {
-                    return view('category.show', compact('category', 'posts', 'user', 'role'));
-                }
-                else {
-                    $aliarm = 'There are no your height in this category. Want to create?';
-                    return view('category.show', compact('category', 'aliarm', 'user', 'role'));
-                }
-
-            }
-            elseif ($role == 'editor') {
-                $posts_all_cetegory = $category->posts;
-                $posts = [];
-
-                foreach ($posts_all_cetegory as $post)
-                {
-                    if ($post->user->id == $user->id) {
-                        $posts[] = $post;
-                    }
-                }
-
-                if ($posts){
-                    return view('category.show', compact('category', 'posts', 'user', 'role'));
-                }
-                else {
-                    $aliarm = 'There are no your height in this category. Want to create?';
-                    return view('category.show', compact('category', 'aliarm', 'user', 'role'));
-                }
-
-            }
+        if (auth()->user()->roles->role == 'editor') {
+            $posts = $category->posts->whereIn('author_id', [auth()->user()->id]);
         }
         else {
             $posts = $category->posts;
-            $user = null;
-            return view('category.show', compact('category', 'posts', 'user'));
         }
+
+        return view('category.show', ['category' => $category, 'posts' => $posts]);
     }
 
     /**
@@ -133,7 +90,7 @@ class CategoryController extends Controller
     {
         $user = auth()->user();
         if ($user && $user->roles->role == 'admin'){
-            return view('category.edit', compact('user', 'category'));
+            return view('category.edit', ['category' => $category]);
         } else {
             return redirect('/neh');
         }
@@ -149,10 +106,10 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $data = $request->validate([
-            'title' => ['required', 'unique:categories,title'.$category->id, 'min:3', 'max:255'],
-            'description' => ['required'],
-            'meta_keywords' => ['required', 'max:255'],
-            'meta_description' => ['required']
+            'title' => ['required', 'unique:categories,title,'.$category->id, 'min:3', 'max:255'],
+            'description' => ['required', 'min:5', 'max:10000'],
+            'meta_keywords' => ['required', 'min:3', 'max:255'],
+            'meta_description' => ['required', 'min:3', 'max:255']
         ]);
         $category->update($data);
 

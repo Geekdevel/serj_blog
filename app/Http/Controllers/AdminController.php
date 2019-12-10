@@ -16,26 +16,18 @@ class AdminController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->roles->role){
-            $role = auth()->user()->roles->role;
-            if ($role == 'admin') {
-                $categories = Category::all();
-                $users = User::all();
-                $user = auth()->user();
-                return view('admin.index', compact('role', 'users', 'user', 'categories'));
-            } elseif ($role == 'editor') {
-                $user = auth()->user();
-                $categories=[];
-                foreach ($posts as $post)
-                {
-                    $categories[] = $post->category;
-                }
-                $categories = array_unique($categories);
-                return view('admin.index', compact('role', 'user', 'categories'));
-            } else {
-                return view('auth.register');
-            }
-        } else {
+        $user = auth()->user();
+        if ($user && $user->roles->role == 'admin') {
+            $categories = Category::all();
+            $users = User::all();
+            return view('admin.index', ['categories' => $categories, 'users' => $users]);
+        }
+        elseif ($user && $user->roles->role == 'editor') {
+            $categories = $user->categories->unique();
+            $users[] = $user;
+            return view('admin.index', ['categories' => $categories, 'users' => $users]);
+        }
+        else {
             return view('auth.register');
         }
     }
@@ -82,7 +74,7 @@ class AdminController extends Controller
     {
         $role = auth()->user()->roles->role;
         $roles = Role::all();
-        return view('admin.edit', compact('user', 'role', 'roles'));
+        return view('admin.edit', ['user' => $user, 'role' => $role, 'roles' => $roles]);
     }
 
     /**
@@ -97,7 +89,7 @@ class AdminController extends Controller
         $data = $request->validate([
             'first_name' => ['required', 'alpha', 'string', 'max:255'],
             'last_name' => ['required', 'alpha', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'role_id' => ['required', 'integer']
         ]);
 

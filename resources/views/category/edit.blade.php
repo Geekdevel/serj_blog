@@ -15,12 +15,6 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        @guest
-            <div class="col-12 text-center">
-                <h1>This page is for registered users!</h1>
-                <a href="/" class="btn btn-danger">HOME</a>
-            </div>
-        @endguest
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">

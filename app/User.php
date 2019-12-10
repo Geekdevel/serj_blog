@@ -58,4 +58,8 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Post', 'author_id', 'id');
     }
+    public function categories()
+    {
+        return $this->belongsToMany('App\Category', 'posts', 'author_id', 'category_id');
+    }
 }

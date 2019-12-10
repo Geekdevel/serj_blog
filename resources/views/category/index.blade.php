@@ -13,55 +13,51 @@
 @endsection
 
 @section('content')
-<div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                @if ($user)
-                    <div class="card-header text-center">Welcom to {{ mb_strtoupper($user->roles->role) }} {{ $user->first_name.' '.$user->last_name }}</div>
-                @else
-                    <div class="card-header text-center"><h1>Welcom to category blog!</h1></div>
-                @endif
+         <div class="col-12 text-center">
+            <h1>This Categories list</h1>
+            <h4>Welcome {{ auth()->user()->roles->role }} {{ mb_strtoupper(auth()->user()->first_name).' '.mb_strtoupper(auth()->user()->last_name)}}</h4>
+        </div>
+    </div>
+
+    @if (auth()->user()->roles->role == 'admin')
+    <div class="row justify-content-center">
+         <div class="col-12 text-center">
+            <a href="/category/create" class="btn btn-success">Create category</a>
+        </div>
+    </div>
+    @endif
+
+    <div class="row justify-content-center">
+        @foreach ($categories as $category)
+            <div class="col-12 col-md-4 col-lg-3 card">
                 <div class="card-body">
+                    <h5 class="card-title text-center">
+                        <a href="/category/{{ $category->id }}"> {!! $category->title !!}</a>
+                    </h5>
+                    <p class="text-justify">{!! $category->description !!}</p>
+                </div>
+
+                <div class="card-footer">
                     <div class="row justify-content-center">
-                        <div class="col-6">
-                            <table>
-                                <thead>
-                                    <tr class="text-center">
-                                        <th>Categories</th>
-                                        @if($user->roles->role == 'admin')
-                                            <th>Posts</th>
-                                        @endif
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($categories as $category)
-                                        <tr>
-                                            <td><a href="/category/{{ $category->id }}">{{ $category->title }}</a></td>
-                                            @if($user->roles->role == 'admin')
-                                                <td class="text-center">{{ $category->posts->count() }}</td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        @if (auth()->user()->roles->role == 'admin')
+                            <div class="col-4 text-center">
+                                <a href="/category/{{$category->id}}/edit" class="btn btn-secondary">Edit category</a>
+                            </div>
+                            <div class="col-4 text-center">
+                                <form action="{{ route('category.destroy', $category->id)}}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger" type="submit">DELETE</button>
+                                </form>
+                            </div>
+                        @endif
+                        <div class="col-4 text-center">
+                            <a href="/posts/create" class="btn btn-primary">Create posts</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endforeach
     </div>
-    @if ($user->roles->role == 'admin')
-        <div class="row">
-            <div class="col-12 text-center"><a href="/category/create" class="btn btn-success">Create category</a></div>
-        </div>
-        <div class="row">
-            <div class="col-12 text-center"><a href="/posts/create" class="btn btn-primary">Create posts</a></div>
-        </div>
-    @elseif ($user)
-        <div class="row">
-            <div class="col-12 text-center"><a href="/posts/create" class="btn btn-primary">Create posts</a></div>
-        </div>
-    @endif
-</div>
 @endsection
