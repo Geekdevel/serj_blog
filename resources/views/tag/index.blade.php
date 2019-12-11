@@ -18,6 +18,11 @@
         <div class="col-12 text-center">
             <h1>This tag list</h1>
         </div>
+        @auth
+            <div class="col-12 text-center">
+                <a href="/tag/create" class="btn btn-success">Create Tag</a>
+            </div>
+        @endauth
     </div>
     <div class="row">
         @foreach ($tags as $tag)

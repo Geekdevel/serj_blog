@@ -52,6 +52,7 @@
                         <a href="/user" class="btn btn-secondary">HOME</a>
                         <a href="/category" class="btn btn-secondary">CATEGORY</a>
                         <a href="/posts" class="btn btn-secondary">POSTS</a>
+                        <a href="/tag" class="btn btn-secondary">TAG</a>
                     </div>
                 @endauth
                 <!-- end castom blok -->

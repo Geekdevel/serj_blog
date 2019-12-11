@@ -57,7 +57,7 @@ class TagController extends Controller
     public function index()
     {
         $tags = Tag::all();
-        return view('tag.index', compact('tags'));
+        return view('tag.index', ['tags' => $tags]);
     }
 
     /**
@@ -70,7 +70,8 @@ class TagController extends Controller
         if (auth()->user()) {
             $posts = Post::all();
             $posts = $posts->pluck('title', 'id');
-            return view('tag.create', compact('posts'));
+            //dd($posts);
+            return view('tag.create', ['posts' => $posts]);
         }
         else {
             return redirect('/neh');
@@ -88,10 +89,10 @@ class TagController extends Controller
         $post_id = $request->post_id;
 
         $data = $request->validate([
-            'title' => ['required', 'unique:tags,title', 'min:3', 'max:255']
+            'title' => ['required', 'min:3', 'max:255']
         ]);
-
-        $tag = Tag::create($data);
+        $tag = Tag::updateOrCreate($data);
+        $tag_id = $tag->id;
 
         $tag_id = $tag->id;
 
@@ -100,7 +101,7 @@ class TagController extends Controller
             $data_new += ['post_id' => $value];
             $data_new += ['tag_id' => $tag_id];
 
-            Post_tag::create($data_new);
+            Post_tag::updateOrCreate($data_new);
         }
 
         return redirect('/tag/'.$tag_id)->with('success', "Tag CREATE");
@@ -114,7 +115,7 @@ class TagController extends Controller
      */
     public function show(Tag $tag)
     {
-        return view('tag.show', compact('tag'));
+        return view('tag.show', ['tag' => $tag]);
     }
 
     /**
@@ -127,7 +128,7 @@ class TagController extends Controller
     {
         if (auth()->user()){
             $posts = Post::all();
-            return view('tag.edit', compact('tag', 'posts'));
+            return view('tag.edit', ['tag' => $tag, 'posts' => $posts]);
         }
         else {
             return redirect('/neh');
