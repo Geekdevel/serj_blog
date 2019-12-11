@@ -24,7 +24,7 @@
         @if(Route::currentRouteName() == 'posts.show')
             <script src="{{ asset('js/tag.js') }}" defer></script>
         @endif
-        @if(Route::currentRouteName() == 'tag.create')
+        @if(Route::currentRouteName() == 'tag.create' || Route::currentRouteName() == 'tag.edit')
             <script src="{{ asset('js/addtag.js') }}" defer></script>
         @endif
     @endauth

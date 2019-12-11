@@ -21,7 +21,7 @@
     </div>
     <div class="row">
         <div class="col-12 card">
-            <form method="POST" action="{{ route('tag.edit', $tag->id) }}">
+            <form method="POST" action="{{ route('tag.update', $tag->id) }}">
                 @method ( 'PUT')
                 @csrf
 
@@ -39,20 +39,23 @@
                     </div>
                 </div>
 
+                <div id="posts_list">
+                    @foreach ($tag->posts as $post)
+                        <div class="form-group row post_id">
+                            <label for="post_id" class="col-md-4 col-form-label text-md-right">{{ __('Post title') }}</label>
 
-                <div class="form-group row post_id">
-                    <label for="post_id" class="col-md-4 col-form-label text-md-right">{{ __('Post title') }}</label>
-
-                        <div class="col-md-6">
-                            <select name="post_id[]">
-                                @foreach ($posts as $key => $value)
-                                    {{--@if ($post->id == $key)
-                                        <option class="post" value="{{ $key }}" selected>{!! $value !!}</option>
-                                    @endif--}}
-                                    <option class="post" value="{{ $key }}"> {!! $value !!} </option>
-                                @endforeach
-                            </select>
+                                <div class="col-md-6">
+                                    <select name="post_id[]">
+                                        @foreach ($posts as $key => $value)
+                                            @if ($post->id == $key)
+                                                <option class="post" value="{{ $key }}" selected>{!! $value !!}</option>
+                                            @endif
+                                            <option class="post" value="{{ $key }}"> {!! $value !!} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                         </div>
+                    @endforeach
                 </div>
 
 

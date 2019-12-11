@@ -29,7 +29,7 @@ class TagController extends Controller
             'title' => ['required', 'min:3', 'max:255']
         ]);
 
-        $tag = Tag::firstorcreate($data);
+        $tag = Tag::updateOrCreate($data);
 
         $post_id = $request->post_id;
 
@@ -37,16 +37,7 @@ class TagController extends Controller
         $data_new += ['post_id' => $post_id];
         $data_new += ['tag_id' => $tag->id];
 
-        Post_tag::create($data_new);
-
-        $new_post_tags = Post::find($post_id);
-
-        $new_tags = [];
-        foreach ($new_post_tags->tags as $value) {
-            $new_tags[] = $value->title;
-        }
-
-        return var_dump($new_tags);
+        Post_tag::updateOrCreate($data_new);
     }
 
     /**
@@ -70,7 +61,6 @@ class TagController extends Controller
         if (auth()->user()) {
             $posts = Post::all();
             $posts = $posts->pluck('title', 'id');
-            //dd($posts);
             return view('tag.create', ['posts' => $posts]);
         }
         else {
@@ -127,7 +117,7 @@ class TagController extends Controller
     public function edit(Tag $tag)
     {
         if (auth()->user()){
-            $posts = Post::all();
+            $posts = Post::pluck('title', 'id');
             return view('tag.edit', ['tag' => $tag, 'posts' => $posts]);
         }
         else {
@@ -142,9 +132,28 @@ class TagController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Tag $tag)
     {
-        //
+
+        $post_id = $request->post_id;
+
+        $data = $request->validate([
+            'title' => ['required', 'min:3', 'max:255']
+        ]);
+        $tag = Tag::updateOrCreate($data);
+        $tag_id = $tag->id;
+
+        $tag_id = $tag->id;
+
+        foreach ($post_id as $value) {
+            $data_new = [];
+            $data_new += ['post_id' => $value];
+            $data_new += ['tag_id' => $tag_id];
+
+            Post_tag::updateOrCreate($data_new);
+        }
+
+        return redirect('/tag/'.$tag_id)->with('success', "Tag UPDATE");
     }
 
     /**
@@ -153,8 +162,9 @@ class TagController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Tag $tag)
     {
-        //
+        $tag->delete();
+        return redirect('/tag')->with('success', "Tag DELETED");
     }
 }

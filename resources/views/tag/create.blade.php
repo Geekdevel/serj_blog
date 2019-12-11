@@ -38,15 +38,17 @@
                     </div>
                 </div>
 
-                <div class="form-group row post_id">
-                    <label for="post_id" class="col-md-4 col-form-label text-md-right">{{ __('Post title') }}</label>
+                <div id="posts_list">
+                    <div class="form-group row post_id">
+                        <label for="post_id" class="col-md-4 col-form-label text-md-right">{{ __('Post title') }}</label>
 
-                    <div class="col-md-6">
-                        <select name="post_id[]">
-                            @foreach ($posts as $key => $value)
-                                <option class="post" value="{{ $key }}">{!! $value !!}</option>
-                            @endforeach
-                        </select>
+                        <div class="col-md-6">
+                            <select name="post_id[]">
+                                @foreach ($posts as $key => $value)
+                                    <option class="post" value="{{ $key }}">{!! $value !!}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
 
