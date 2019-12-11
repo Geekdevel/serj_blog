@@ -70,8 +70,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        if (auth()->user()->roles->role == 'editor') {
-            $posts = $category->posts->whereIn('author_id', [auth()->user()->id]);
+        $user = auth()->user();
+        if ($user && $user->roles->role == 'editor') {
+            $posts = $category->posts->whereIn('author_id', [$user->id]);
         }
         else {
             $posts = $category->posts;

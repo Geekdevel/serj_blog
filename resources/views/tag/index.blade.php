@@ -34,16 +34,18 @@
                         <p class="card-text"><a href="/posts/{{ $post->id }}"> {!! $post->title !!} </a></p>
                     @endforeach
                 </div>
-                <div class="card-footer text-center">
-                    <div class="btn-group" role="group">
-                        <a href="/tag/{{ $tag->id }}/edit" class="btn btn-primary">EDIT</a>
-                        <form action="{{ route('tag.destroy', $tag->id)}}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger" type="submit">DELETE</button>
-                        </form>
+                @auth
+                    <div class="card-footer text-center">
+                        <div class="btn-group" role="group">
+                            <a href="/tag/{{ $tag->id }}/edit" class="btn btn-primary">EDIT</a>
+                            <form action="{{ route('tag.destroy', $tag->id)}}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger" type="submit">DELETE</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                @endauth
             </div>
         @endforeach
     </div>
