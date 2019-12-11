@@ -12,15 +12,8 @@ class TagController extends Controller
     public function listTag(Request $request)
     {
         $post = Post::find($request->post_id);
-        $tags = $post->tags;
-        $returned = [];
-
-        foreach ($tags as $tag) {
-            $returned[] = '<a href="/tag/'.$tag->id.'">'.$tag->title.'</a> ';
-        }
-
-        $returned = implode(', ', $returned);
-        return $returned;
+        $tags = $post->tags->pluck('title', 'id');
+        return $tags;
     }
 
     public function addTag(Request $request)

@@ -141,7 +141,13 @@ function getListTags() {
     },
     cache: false,
     success: function success(data) {
-      tags_show.innerHTML = data;
+      var str_return = [];
+
+      for (key in data) {
+        str_return.push('<a href="/tag/' + key + '">' + data[key] + '</a>');
+      }
+
+      tags_show.innerHTML = str_return.join(', ');
     }
   });
 }
